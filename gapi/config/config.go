@@ -120,3 +120,6 @@ func (conf *Config) ParseConf() error {
 	return nil
 }
 
+func (conf *Config) Get(key string) interface {
+	return conf.C.Get(key)
+}
