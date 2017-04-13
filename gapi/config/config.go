@@ -6,8 +6,8 @@ import (
 	//"time"
 	"path/filepath"
 	"github.com/pelletier/go-toml"
-	"github.com/gwtony/gapi/errors"
-	"github.com/gwtony/gapi/variable"
+	"github.com/gwtony/thor/gapi/errors"
+	"github.com/gwtony/thor/gapi/variable"
 )
 
 // Config of server
@@ -65,7 +65,7 @@ func (conf *Config) ParseConf() error {
 	if item == nil {
 		conf.HttpAddr = ""
 	} else {
-		conf.HttpAddr = string(item)
+		conf.HttpAddr = item.(string)
 		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on http addr:", conf.HttpAddr)
 	}
 
@@ -73,7 +73,7 @@ func (conf *Config) ParseConf() error {
 	if item == nil {
 		conf.TcpAddr = ""
 	} else {
-		conf.TcpAddr = string(item)
+		conf.TcpAddr = item.(string)
 		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on tcp addr:", conf.TcpAddr)
 	}
 
@@ -81,7 +81,7 @@ func (conf *Config) ParseConf() error {
 	if item == nil {
 		conf.UdpAddr = ""
 	} else {
-		conf.UdpAddr = string(item)
+		conf.UdpAddr = item.(string)
 		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on udp addr:", conf.UdpAddr)
 	}
 
@@ -89,7 +89,7 @@ func (conf *Config) ParseConf() error {
 	if item == nil {
 		conf.UsocketAddr = ""
 	} else {
-		conf.UsocketAddr = string(item)
+		conf.UsocketAddr = item.(string)
 		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on usocket addr:", conf.UsocketAddr)
 	}
 
@@ -98,7 +98,7 @@ func (conf *Config) ParseConf() error {
 		fmt.Fprintln(os.Stderr, "[Info] [Default] log not found, use default log file")
 		conf.Log = ""
 	} else {
-		conf.Log = string(item)
+		conf.Log = item.(string)
 	}
 
 	item = conf.C.Get("default.level")
@@ -106,7 +106,7 @@ func (conf *Config) ParseConf() error {
 		conf.Level = "error"
 		fmt.Fprintln(os.Stderr, "[Info] [Default] level not found, use default log level error")
 	} else {
-		conf.Level = string(item)
+		conf.Level = item.(string)
 	}
 
 	item = conf.C.Get("default.rotate_line")
@@ -114,12 +114,12 @@ func (conf *Config) ParseConf() error {
 		fmt.Fprintln(os.Stderr, "[Info] [Default] rotate_line not found, use default", variable.DEFAULT_ROTATE_LINE)
 		conf.RotateLine = int(variable.DEFAULT_ROTATE_LINE)
 	} else {
-		conf.RotateLine = int(item)
+		conf.RotateLine = int(item.(int64))
 	}
 
 	return nil
 }
 
-func (conf *Config) Get(key string) interface {
+func (conf *Config) Get(key string) interface{} {
 	return conf.C.Get(key)
 }

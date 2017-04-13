@@ -2,7 +2,7 @@ package log
 
 import (
 	"github.com/gwtony/log4go"
-	"github.com/gwtony/gapi/variable"
+	"github.com/gwtony/thor/gapi/variable"
 )
 
 // Log function

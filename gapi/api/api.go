@@ -5,16 +5,13 @@ import (
 	"fmt"
 	"time"
 	"net/http"
-	"github.com/gwtony/gapi/log"
-	"github.com/gwtony/gapi/errors"
-	"github.com/gwtony/gapi/utils"
-	"github.com/gwtony/gapi/server"
-	"github.com/gwtony/gapi/hserver"
-	"github.com/gwtony/gapi/tserver"
-	"github.com/gwtony/gapi/userver"
-	"github.com/gwtony/gapi/usocket"
-	"github.com/gwtony/gapi/config"
-	"github.com/gwtony/gapi/variable"
+	"github.com/gwtony/thor/gapi/log"
+	"github.com/gwtony/thor/gapi/errors"
+	"github.com/gwtony/thor/gapi/utils"
+	"github.com/gwtony/thor/gapi/server"
+	"github.com/gwtony/thor/gapi/hserver"
+	"github.com/gwtony/thor/gapi/config"
+	"github.com/gwtony/thor/gapi/variable"
 )
 
 type apiContext struct {
@@ -89,17 +86,6 @@ func Run() {
 
 func AddHttpHandler(url string, handler http.Handler) {
 	api.server.GetHttpServer().AddRouter(url, handler)
-}
-
-func AddTcpHandler(handler tserver.TcpHandler) {
-	api.server.GetTcpServer().AddHandler(handler)
-}
-
-func AddUdpHandler(handler userver.UdpHandler) {
-	api.server.GetUdpServer().AddHandler(handler)
-}
-func AddUsocketHandler(handler usocket.UsocketHandler) {
-	api.server.GetUsocketServer().AddHandler(handler)
 }
 
 func ReturnError(r *http.Request, w http.ResponseWriter, msg string, err error, log log.Log) {

@@ -7,10 +7,10 @@ import (
 	"net/http"
 	//"io/ioutil"
 	//"encoding/json"
-	"github.com/gwtony/gapi/variable"
-	"github.com/gwtony/gapi/log"
-	"github.com/gwtony/gapi/errors"
-	"github.com/gwtony/gapi/router"
+	"github.com/gwtony/thor/gapi/variable"
+	"github.com/gwtony/thor/gapi/log"
+	"github.com/gwtony/thor/gapi/errors"
+	"github.com/gwtony/thor/gapi/router"
 )
 
 // HttpServer http server
