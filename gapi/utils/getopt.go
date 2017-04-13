@@ -4,7 +4,7 @@ import (
 	"os"
 	"flag"
 	"strings"
-	"github.com/gwtony/gapi/variable"
+	"github.com/gwtony/thor/gapi/variable"
 )
 
 // EOF means reach the end

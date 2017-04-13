@@ -2,7 +2,7 @@ package router
 
 import (
 	"net/http"
-	"github.com/gwtony/gapi/log"
+	"github.com/gwtony/thor/gapi/log"
 )
 
 // Router is HTTP router
