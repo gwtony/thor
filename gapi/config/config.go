@@ -5,7 +5,7 @@ import (
 	"fmt"
 	//"time"
 	"path/filepath"
-	goconf "github.com/msbranco/goconfig"
+	"github.com/pelletier/go-toml"
 	"github.com/gwtony/gapi/errors"
 	"github.com/gwtony/gapi/variable"
 )
@@ -26,7 +26,7 @@ type Config struct {
 	RotateLine  int     /* log rotate line */
 
 	File        string  /* config file */
-	C           *goconf.ConfigFile /* goconfig struct */
+	C           *toml.TomlTree /* toml config */
 }
 
 func (conf *Config) SetConf(file string) {
@@ -42,7 +42,8 @@ func (conf *Config) ReadConf(file string) error {
 		}
 	}
 
-	c, err := goconf.ReadConfigFile(file)
+	//c, err := goconf.ReadConfigFile(file)
+	c, err := toml.LoadFile(file)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "[Error] Read conf file %s failed", file)
 		return err
@@ -53,65 +54,68 @@ func (conf *Config) ReadConf(file string) error {
 
 // ParseConf parses config
 func (conf *Config) ParseConf() error {
-	var err error
+	//var err error
 
 	if conf.C == nil {
 		fmt.Fprintln(os.Stderr, "[Error] Must read config first")
 		return errors.BadConfigError
 	}
 
-	conf.HttpAddr, err = conf.C.GetString("default", "http_addr")
-	if err != nil {
-		//fmt.Fprintln(os.Stderr, "[Info] [Default] Read conf: No HttpAddr")
+	item := conf.C.Get("default.http_addr")
+	if item == nil {
 		conf.HttpAddr = ""
 	} else {
+		conf.HttpAddr = string(item)
 		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on http addr:", conf.HttpAddr)
 	}
 
-	conf.TcpAddr, err = conf.C.GetString("default", "tcp_addr")
-	if err != nil {
-		//fmt.Fprintln(os.Stderr, "[Info] [Default] Read conf: No TcpAddr")
-		conf.UdpAddr = ""
+	item = conf.C.Get("default.tcp_addr")
+	if item == nil {
+		conf.TcpAddr = ""
 	} else {
+		conf.TcpAddr = string(item)
 		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on tcp addr:", conf.TcpAddr)
 	}
-	conf.UdpAddr, err = conf.C.GetString("default", "udp_addr")
-	if err != nil {
-		//fmt.Fprintln(os.Stderr, "[Info] [Default] Read conf: No UdpAddr")
+
+	item = conf.C.Get("default.udp_addr")
+	if item == nil {
 		conf.UdpAddr = ""
 	} else {
+		conf.UdpAddr = string(item)
 		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on udp addr:", conf.UdpAddr)
 	}
 
-	conf.UsocketAddr, err = conf.C.GetString("default", "usocket_addr")
-	if err != nil {
+	item = conf.C.Get("default.usocket_addr")
+	if item == nil {
 		conf.UsocketAddr = ""
 	} else {
+		conf.UsocketAddr = string(item)
 		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on usocket addr:", conf.UsocketAddr)
 	}
-	//conf.UdpAddr, err = conf.C.GetString("default", "udp_interface")
-	//if err != nil {
-	//	conf.UdpNIF = ""
-	//} else {
-	//	fmt.Fprintln(os.Stderr, "[Info] [Default] use udp network interface:", conf.UdpNIF)
-	//}
 
-	conf.Log, err = conf.C.GetString("default", "log")
-	if err != nil {
+	item = conf.C.Get("default.log")
+	if item == nil {
 		fmt.Fprintln(os.Stderr, "[Info] [Default] log not found, use default log file")
 		conf.Log = ""
+	} else {
+		conf.Log = string(item)
 	}
-	conf.Level, err = conf.C.GetString("default", "level")
-	if err != nil {
+
+	item = conf.C.Get("default.level")
+	if item == nil {
 		conf.Level = "error"
 		fmt.Fprintln(os.Stderr, "[Info] [Default] level not found, use default log level error")
+	} else {
+		conf.Level = string(item)
 	}
-	rline, err := conf.C.GetInt64("default", "rotate_line")
-	if err != nil {
-		rline = variable.DEFAULT_ROTATE_LINE
-		fmt.Fprintln(os.Stderr, "[Info] [Default] rotate_line not found, use default", rline)
+
+	item = conf.C.Get("default.rotate_line")
+	if item == nil {
+		fmt.Fprintln(os.Stderr, "[Info] [Default] rotate_line not found, use default", variable.DEFAULT_ROTATE_LINE)
+		conf.RotateLine = int(variable.DEFAULT_ROTATE_LINE)
+	} else {
+		conf.RotateLine = int(item)
 	}
-	conf.RotateLine = int(rline)
 
 	return nil
 }
