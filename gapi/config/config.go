@@ -45,7 +45,7 @@ func (conf *Config) ReadConf(file string) error {
 	//c, err := goconf.ReadConfigFile(file)
 	c, err := toml.LoadFile(file)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "[Error] Read conf file %s failed", file)
+		fmt.Fprintln(os.Stderr, "[Error] Read conf file %s failed: ", file, err.Error())
 		return err
 	}
 	conf.C = c
@@ -67,30 +67,6 @@ func (conf *Config) ParseConf() error {
 	} else {
 		conf.HttpAddr = item.(string)
 		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on http addr:", conf.HttpAddr)
-	}
-
-	item = conf.C.Get("default.tcp_addr")
-	if item == nil {
-		conf.TcpAddr = ""
-	} else {
-		conf.TcpAddr = item.(string)
-		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on tcp addr:", conf.TcpAddr)
-	}
-
-	item = conf.C.Get("default.udp_addr")
-	if item == nil {
-		conf.UdpAddr = ""
-	} else {
-		conf.UdpAddr = item.(string)
-		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on udp addr:", conf.UdpAddr)
-	}
-
-	item = conf.C.Get("default.usocket_addr")
-	if item == nil {
-		conf.UsocketAddr = ""
-	} else {
-		conf.UsocketAddr = item.(string)
-		fmt.Fprintln(os.Stderr, "[Info] [Default] listen on usocket addr:", conf.UsocketAddr)
 	}
 
 	item = conf.C.Get("default.log")
